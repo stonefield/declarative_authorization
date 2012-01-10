@@ -7,7 +7,7 @@ module Authorization
     private
     def decl_instance_var(ref, inflection = :singularize)
       raise ArgumentError, "Invalid inflection parameter" unless [:singularize, :pluralize].include?(inflection)
-      ref.to_s.underscore.send(inflection).gsub('/','_').to_sym
+      ref.to_s.underscore.send(inflection).tr('/','_').to_sym
     end
   end
 
@@ -562,7 +562,7 @@ module Authorization
       #   AnyName::Space::ThingsController => :any_name_space_things
       #
       def decl_auth_context
-        controller_path.underscore.gsub('/','_').to_sym
+        controller_path.underscore.tr('/','_').to_sym
       end
       
       protected
@@ -603,7 +603,7 @@ module Authorization
       # => a instance variable name which handles name spaces
       def decl_instance_var(ref = controller_path, inflection = :singularize)
         raise ArgumentError, "Invalid inflection parameter" unless [:singularize, :pluralize].include?(inflection)
-        ref.to_s.underscore.send(inflection).gsub('/','_').to_sym
+        ref.to_s.underscore.send(inflection).tr('/','_').to_sym
       end
     end
   end
