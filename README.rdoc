@@ -1,3 +1,13 @@
+= Changes in this repository as oposed to the original produced fy Steffen
+
+The handling of namespaced models/controllers is done according to rails convension.
+A scaffolf for Fruit::Apple will produce an instance variable name of @fruit_apple.
+
+The original version of Declarative Authorizations does not handle this properly and 
+makes assumptions that name space is not used as a part of the variable name in 
+controllers (e.g. @apple). At least that is my perception.
+
+
 = Declarative Authorization
 
 The declarative authorization plugin offers an authorization mechanism inspired 
