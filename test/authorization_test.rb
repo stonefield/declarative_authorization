@@ -1,5 +1,15 @@
 require File.join(File.dirname(__FILE__), 'test_helper.rb')
 
+
+class Fruit::Banana < MockDataObject
+  def self.name
+    'Fruit::Banana'
+  end
+  def name
+    "Ariena Platano"
+  end
+end
+
 class AuthorizationTest < Test::Unit::TestCase
   
   def test_permit
@@ -19,6 +29,27 @@ class AuthorizationTest < Test::Unit::TestCase
     assert !engine.permit?(:test, :context => :permissions, 
       :user => MockUser.new(:test_role_2))
   end
+
+  def test_permit_for_namespace
+    reader = Authorization::Reader::DSLReader.new
+    reader.parse %{
+      authorization do
+        role :test_role do
+          has_permission_on :fruit_bananas, :to => :test
+        end
+      end
+    }
+    engine = Authorization::Engine.new(reader)
+    assert engine.permit?(:test, :context => :fruit_bananas, :user => MockUser.new(:test_role, :test_role_2))
+    assert !engine.permit?(:test_2, :context => :fruit_apples, :user => MockUser.new(:test_role))
+    assert !engine.permit?(:test, :context => :fruit_bananas, :user => MockUser.new(:test_role_2))
+    object = Fruit::Banana.new
+    assert engine.permit?(:test, :object => object, :user => MockUser.new(:test_role, :test_role_2))
+    assert !engine.permit?(:test_2, :object => object, :user => MockUser.new(:test_role))
+    assert !engine.permit?(:test, :object => object, :user => MockUser.new(:test_role_2))
+  end
+  
+
   
   def test_permit_context_people
     reader = Authorization::Reader::DSLReader.new
@@ -1099,6 +1130,6 @@ class AuthorizationTest < Test::Unit::TestCase
         cloned_engine.auth_rules.first.contexts.object_id
     assert_not_equal engine.auth_rules.first.attributes.first.send(:instance_variable_get, :@conditions_hash)[:attr].object_id,
         cloned_engine.auth_rules.first.attributes.first.send(:instance_variable_get, :@conditions_hash)[:attr].object_id
-  end
+  end  
 end
 

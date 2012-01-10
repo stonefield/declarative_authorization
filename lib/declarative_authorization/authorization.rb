@@ -162,9 +162,9 @@ module Authorization
       options[:context] ||= options[:object] && (
         options[:object].class.respond_to?(:decl_auth_context) ?
             options[:object].class.decl_auth_context :
-            options[:object].class.name.tableize.to_sym
+            ActiveModel::Naming.plural(options[:object]).to_sym
       ) rescue NoMethodError
-      
+
       user, roles, privileges = user_roles_privleges_from_options(privilege, options)
 
       return true if roles.is_a?(Array) and not (roles & omnipotent_roles).empty?

@@ -15,6 +15,8 @@ require File.join(File.dirname(__FILE__), %w{.. lib declarative_authorization in
 require File.join(File.dirname(__FILE__), %w{.. lib declarative_authorization maintenance})
 
 class MockDataObject
+  extend ActiveModel::Naming
+  
   def initialize (attrs = {})
     attrs.each do |key, value|
       instance_variable_set(:"@#{key}", value)
@@ -23,7 +25,7 @@ class MockDataObject
       end
     end
   end
-  
+
   def self.descends_from_active_record?
     true
   end
